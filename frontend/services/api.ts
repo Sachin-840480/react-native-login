@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: process.env.EXPO_BASE_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_BASEURL,
   headers: {
     "Content-Type": "application/json",
   },
