@@ -1,112 +1,191 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function Profile() {
+  const { username } = useLocalSearchParams();
 
-export default function TabTwoScreen() {
+  const user = {
+    username: username || "admin",
+    name: "Satyam Kumar",
+    email: "sachin@1712003.com",
+    phone: "+91 9113160110",
+    department: "Computer Applications",
+    role: "Administrator",
+  };
+
+  const InfoRow = ({
+    icon,
+    title,
+    value,
+  }: {
+    icon: keyof typeof Ionicons.glyphMap;
+    title: string;
+    value: string;
+  }) => (
+    <View style={styles.infoCard}>
+      <Ionicons name={icon} size={24} color="#2563EB" />
+      <View style={{ marginLeft: 15 }}>
+        <Text style={styles.infoTitle}>{title}</Text>
+        <Text style={styles.infoValue}>{value}</Text>
+      </View>
+    </View>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    // <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.container}>
+        {/* Profile Header */}
+
+        <View style={styles.header}>
+          <Ionicons name="person-circle" size={120} color="#2563EB" />
+
+          <Text style={styles.name}>{user.name}</Text>
+
+          <Text style={styles.role}>{user.role}</Text>
+        </View>
+
+        {/* User Information */}
+
+        <InfoRow
+          icon="person-outline"
+          title="Username"
+          value={String(user.username)}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
+
+        <InfoRow icon="mail-outline" title="Email" value={user.email} />
+
+        <InfoRow icon="call-outline" title="Phone" value={user.phone} />
+
+        <InfoRow
+          icon="school-outline"
+          title="Department"
+          value={user.department}
         />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+
+        <InfoRow
+          icon="shield-checkmark-outline"
+          title="Role"
+          value={user.role}
+        />
+
+        {/* Buttons */}
+
+        <TouchableOpacity style={styles.editButton}>
+          <Ionicons name="create-outline" size={20} color="white" />
+
+          <Text style={styles.buttonText}>Edit Profile</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => router.replace("/login")}
+        >
+          <Ionicons name="log-out-outline" size={20} color="white" />
+
+          <Text style={styles.buttonText}>Logout</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    // </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: "#F4F7FC",
+    padding: 20,
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+
+  header: {
+    marginTop: 40,
+    alignItems: "center",
+    marginBottom: 30,
+  },
+
+  name: {
+    marginTop: 10,
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#111827",
+  },
+
+  role: {
+    marginTop: 5,
+    color: "#2563EB",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+  infoCard: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 18,
+    borderRadius: 16,
+    marginBottom: 15,
+
+    elevation: 5,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+  },
+
+  infoTitle: {
+    color: "#666",
+    fontSize: 14,
+  },
+
+  infoValue: {
+    fontSize: 17,
+    fontWeight: "600",
+    color: "#111827",
+  },
+
+  editButton: {
+    marginTop: 15,
+
+    backgroundColor: "#2563EB",
+
+    borderRadius: 14,
+
+    height: 55,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+    flexDirection: "row",
+  },
+
+  logoutButton: {
+    marginTop: 15,
+
+    backgroundColor: "#EF4444",
+
+    borderRadius: 14,
+
+    height: 55,
+
+    justifyContent: "center",
+
+    alignItems: "center",
+
+    flexDirection: "row",
+  },
+
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 8,
   },
 });
